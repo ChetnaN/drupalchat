@@ -940,6 +940,15 @@ function _drupalchat_buddylist($uid) {
       $uid == $friend->uid ? $users[] = $friend->friend_uid : $users[] = $friend->uid;
     }
   }
+    /* AJC TRISKEL */
+    else{
+      /*$view = views_get_view('trusted_contacts');
+      $view->execute();
+      foreach ($view->result as $userContact) {
+          $users[] = $userContact->users_og_membership_1_uid;
+      }*/
+    }
+    /* END AJC TRISKEL */
   return $users;
 }
 
@@ -962,21 +971,35 @@ function _drupalchat_buddylist_online($buddylist) {
 	$result = db_select('drupalchat_users', 'n')
       ->fields('n', array('uid', 'name', 'status'))
       ->condition('timestamp', (time() - variable_get('drupalchat_user_latency', 2)), '>=')
+      ->condition('status', 2, '<=')
       ->condition('uid', $buddylist, 'IN')
       ->execute();
   }
   else {
     if($user->uid > 0) {
+        /* AJC TRISKEL */
+        $result = array();
+        if(!empty($buddylist) && count($buddylist)){
+          $result = db_select('drupalchat_users', 'n')
+            ->fields('n', array('uid', 'name', 'status'))
+            ->condition('timestamp', (time() - variable_get('drupalchat_user_latency', 2)), '>=')
+            ->condition('status', 2, '<=')
+            ->condition('uid', $buddylist, 'IN')
+            ->execute();
+        }
+
+        // $result = db_select('drupalchat_users', 'n')
+        //   ->fields('n', array('uid', 'name', 'status', 'session'))
+        //   ->condition('timestamp', (time() - variable_get('drupalchat_user_latency', 2)), '>=')
+        //   ->condition('status', 2, '<=')
+        //   ->condition('uid', $user->uid, '<>')
+        //   ->execute();
+        /* END AJC TRISKEL */
+      } else {
 	  $result = db_select('drupalchat_users', 'n')
 	    ->fields('n', array('uid', 'name', 'status', 'session'))
         ->condition('timestamp', (time() - variable_get('drupalchat_user_latency', 2)), '>=')
-        ->condition('uid', $user->uid, '<>')
-        ->execute();
-	}
-	else {
-	  $result = db_select('drupalchat_users', 'n')
-	    ->fields('n', array('uid', 'name', 'status', 'session'))
-        ->condition('timestamp', (time() - variable_get('drupalchat_user_latency', 2)), '>=')
+        ->condition('status', 2, '<=')
         ->condition('session', _drupalchat_get_sid(), '<>')
         ->execute();
 	}

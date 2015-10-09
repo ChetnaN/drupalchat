@@ -386,12 +386,12 @@ function drupalchatMain() {
   		return false;
   	});
     jQuery('#drupalchat-chat-options-s').live('click', function(e) {
-      if(jQuery(this).html() == '<a href="#">Couper le son</a>') {
-        jQuery(this).html('<a href="#">Activer le son</a>');
+      if(jQuery(this).html() == '<a href="#">Mute</a>') {
+        jQuery(this).html('<a href="#">Unmute</a>');
       Drupal.settings.drupalchat.notificationSound = '2';
       }
       else {
-        jQuery(this).html('<a href="#">Couper le son</a>');
+        jQuery(this).html('<a href="#">Mute</a>');
       Drupal.settings.drupalchat.notificationSound = '1';
       }
       jQuery('#drupalchat-chat-options').hide();
