@@ -18,9 +18,9 @@ function drupalchat_settings_form($form, &$form_state) {
   }
   */
   $seconds = array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7=>7, 8 => 8, 9 => 9, 10 => 10, 11 => 11, 12 => 12, 13 => 13, 14 => 14, 15 => 15, 16 => 16, 17 => 17, 18 => 18, 19 => 19, 20 => 20, 30 => 30, 40 => 40, 50 => 50, 60 => 60, 70 => 70, 80 => 80, 90 => 90, 100 => 100, 110 => 110, 120 => 120, 150 => 150, 180 => 180, 240 => 240, 300 => 300);
-
+  
   $themes = _drupalchat_load_themes(drupal_get_path('module', 'drupalchat') . '/themes', 'css');
-
+  
   $polling_method = variable_get('drupalchat_polling_method', DRUPALCHAT_AJAX);
 
   if ($polling_method == DRUPALCHAT_LONGPOLL && ini_get('max_execution_time') < 30) {
@@ -110,13 +110,6 @@ function drupalchat_settings_form($form, &$form_state) {
     '#description' => t('Select whether to enable browser based mobile app.'),
     '#options' => array('1' => 'Yes', '2' => 'No'),
     '#default_value' => variable_get('drupalchat_enable_mobile_browser_app', '1'),
-  );
- $form['drupalchat_general_settings']['drupalchat_enable_mobile_sdk_integration']= array(
-    '#type'=>'select',
-    '#title'=> t('Enable Mobile SDK Integration'),
-    '#description' => t('Select whether to enable native mobile sdk integration.'),
-    '#options' => array('1' => 'Yes', '2' => 'No'),
-    '#default_value' => variable_get('drupalchat_enable_mobile_sdk_integration', '2'),
   );
   $form['drupalchat_general_settings']['drupalchat_log_messages'] = array(
     '#type' => 'select',
@@ -257,7 +250,7 @@ function drupalchat_settings_form($form, &$form_state) {
     '#default_value' => variable_get('drupalchat_path_pages', NULL),
     '#description' => $description,
   );
-
+  
   $form['drupalchat_css'] = array(
     '#type' => 'fieldset',
     '#title' => t('Theme Customization'),
@@ -268,21 +261,21 @@ function drupalchat_settings_form($form, &$form_state) {
     '#title' => t('Chat Top Bar Color'),
     '#description' => t("Choose the color of the top bar in the chat."),
     '#default_value' => variable_get('drupalchat_chat_topbar_color', '#222222'),
-	'#suffix' => '<div id="drupalchat-colorpicker1"></div>',
+	'#suffix' => '<div id="drupalchat-colorpicker1"></div>', 
   );
   $form['drupalchat_css']['drupalchat_chat_topbar_text_color'] = array(
     '#type' => 'textfield',
     '#title' => t('Chat Top Bar Text Color'),
     '#description' => t("Choose the color of the text in top bar in the chat."),
     '#default_value' => variable_get('drupalchat_chat_topbar_text_color', '#FFFFFF'),
-	'#suffix' => '<div id="drupalchat-colorpicker2"></div>',
+	'#suffix' => '<div id="drupalchat-colorpicker2"></div>', 
   );
   $form['drupalchat_css']['drupalchat_font_color'] = array(
     '#type' => 'textfield',
     '#title' => t('Chat Font Color'),
     '#description' => t("Choose the color of the text in the chat."),
     '#default_value' => variable_get('drupalchat_font_color', '#222222'),
-	'#suffix' => '<div id="drupalchat-colorpicker3"></div>',
+	'#suffix' => '<div id="drupalchat-colorpicker3"></div>', 
   );
   $form['drupalchat_css']['drupalchat_public_chatroom_header'] = array(
     '#type' => 'textfield',
@@ -414,7 +407,7 @@ function drupalchat_settings_form($form, &$form_state) {
      '#description' => t('Select whether to show search bar in online user list.'),
      '#options' => array(1 => 'Yes', 2 => 'No'),
      '#default_value' => variable_get('drupalchat_enable_search_bar', 1),
-   );
+   ); 
   $form['drupalchat_chatlist_cont']['drupalchat_rel'] = array(
     '#type' => 'radios',
     '#title' => t('Relationship method'),
@@ -459,17 +452,17 @@ function drupalchat_settings_form_validate($form, &$form_state) {
 	  $error = array();
 	  foreach($array as $key) {
 	    if(!db_query("SELECT COUNT(*) FROM {user_relationship_types} WHERE name = :name", array(':name' => $key))->fetchField())
-          $error[] = $key;
+          $error[] = $key;		
       }
 	  if(!empty($error))
-	    form_set_error('drupalchat_ur_name', t('User Relationship type %type was not found.', array('%type' => drupal_implode_tags($error))));
+	    form_set_error('drupalchat_ur_name', t('User Relationship type %type was not found.', array('%type' => drupal_implode_tags($error))));	  
     }
   }
-
+  
   if(($form_state['values']['drupalchat_polling_method'] == DRUPALCHAT_COMMERCIAL) && (!$form_state['values']['drupalchat_external_api_key'])) {
     form_set_error('drupalchat_external_api_key', t('Please enter API key.'));
   }
-
+  
   if(($form_state['values']['drupalchat_polling_method'] == DRUPALCHAT_COMMERCIAL) && ($form_state['values']['drupalchat_external_api_key'])) {
     if(($form_state['values']['drupalchat_show_admin_list'])==1) {
 	  $form_state['values']['drupalchat_enable_chatroom'] = 2;
@@ -498,7 +491,6 @@ function drupalchat_settings_form_validate($form, &$form_state) {
       'stop_word_list' => $form_state['values']['drupalchat_stop_word_list'],
       'file_attachment' => $form_state['values']['drupalchat_enable_file_attachment'],
       'mobile_browser_app' => $form_state['values']['drupalchat_enable_mobile_browser_app'],
-	  'mobile_sdk_integration' => $form_state['values']['drupalchat_enable_mobile_sdk_integration'],
       'enable_groups' => ($form_state['values']['drupalchat_rel']==3)?'1':'2',
     );
 
@@ -512,7 +504,7 @@ function drupalchat_settings_form_validate($form, &$form_state) {
 	    $data['valid_uids'] = $new_valid_uids;
 	  }
     }
-
+	
   $data = json_encode($data);
     $options = array(
       'method' => 'POST',
